@@ -19,12 +19,17 @@
 
 
 
+## 2026-11-15
+### 今天学了
+- SQL查询语句的使用方法：UPDATE/DELETE/NULL/IN/DISTINCT + 聚合查询（COUNT/SUM/AVG/GROUP BY/HAVING）
+- SQLZoo刷了专题的习题
 
-
-
-
-
-
+### 踩的坑
+- select选择的多个对象多加 逗号 导致报语法错误 1064
+- 解决：删除多于都好---->注意一下
+ 
+### 明天
+- 复盘 + 10 条限时测试
 
 
 
