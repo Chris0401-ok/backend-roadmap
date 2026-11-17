@@ -46,14 +46,31 @@
 - HAVING（分组后过滤）：在数据分组并计算完聚合函数之后执行。所以它专门用来对 SUM()、COUNT() 等聚合后的结果进行过滤
  
 ### 明天（2026-11-17 周二）
-- 今天 10/10，单表查询和聚合已过关，不再复盘错题。
-- 加练 10 条聚合查询，限时完成，重点练 GROUP BY + HAVING + ORDER BY 聚合结果。
-- 预习 INNER JOIN：理解“两张表通过 id 关联”，写 3 条简单 JOIN。
-- SQLZoo：SUM and COUNT 剩余题目，做完对答案。
-- 新建 `week1/day04.sql`，保存后 Commit + Push。
+- 今天 10/10，单表查询和聚合已过关，不再复盘错题
+- 加练 10 条聚合查询，限时完成，重点练 GROUP BY + HAVING + ORDER BY 聚合结果
+- 预习 INNER JOIN：理解“两张表通过 id 关联”，写 3 条简单 JOIN
+- SQLZoo：SUM and COUNT 剩余题目，做完对答案
+- 新建 `week1/day04.sql`，保存后 Commit + Push
 
 
+## 2026-11-17
+### 今天学了
+- SQL查询语句的复习 聚合函数的使用
+- 加练 10 条聚合查询测试：10/10 全对
+- SQLZoo刷了sum+count的剩余习题
+- 预习 INNER JOIN：理解“两张表通过 id 关联”，写了 3 条简单 JOIN
+- 表别名：`users u`、`orders o`
 
+### 踩的坑
+- ORDER BY、GROUP BY、WHERE的顺序写错导致报错
+- 解决：ORDER BY 要放在 GROUOP BY后面；WHERE放在FROM后GROUOP BY前
+- 注意：SELECT -> FROM -> WHERE -> GROUP BY -> HAVING -> ORDER BY -> LIMIT
+ 
+### 明天（2026-11-17 周二）
+- 10 条 JOIN 加练：JOIN + GROUP BY + HAVING + ORDER BY
+- 预习 LEFT JOIN：保留左表所有行，右表没有匹配就是 NULL
+- SQLZoo `JOIN` 章节做 2-3 题
+- 新建 `week1/day05.sql`，保存后 Commit + Push
 
 
 
