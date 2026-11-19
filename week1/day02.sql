@@ -111,7 +111,7 @@ SELECT user_id,STATUS,
        SUM(amount) AS total_amount
   FROM orders
   GROUP BY user_id,STATUS
-  ORDER BY user_id,STATUS
+  ORDER BY user_id,STATUS;
 
 
 
