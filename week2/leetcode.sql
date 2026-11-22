@@ -16,4 +16,12 @@ join employee m on e.managerid = m.id
 where e.salary > m.salary;
 
 
+-- LeetCode 182. 查找重复的电子邮箱（2026-11-22）
+-- 考点：GROUP BY 分组 + HAVING 过滤聚合结果；WHERE 在分组前执行，不能放 COUNT(*)
+SELECT email
+FROM Person
+GROUP BY email
+HAVING COUNT(*) > 1;
+
+
 

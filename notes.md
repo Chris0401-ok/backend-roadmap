@@ -149,9 +149,81 @@ SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT
 
 ### LeetCode 刷题顺序（每天 1 题，不要一次刷多题）
 - [x] 175 组合两个表（LEFT JOIN）
-- [ ] 181 超过经理收入的员工（自连接）
-- [ ] 182 查找重复的电子邮箱（GROUP BY + HAVING）
+- [x] 181 超过经理收入的员工（自连接）
+- [x] 182 查找重复的电子邮箱（GROUP BY + HAVING）
 - [ ] 183 从不订购的客户（LEFT JOIN + IS NULL）
 - [ ] 196 删除重复的电子邮箱
 - [ ] 197 上升的温度（日期 + 自连接）
 - 176、177、178、180 是中等/窗口函数，等 Week 3 学完再回来做
+
+
+## 2026-11-21（周六）
+
+### 今天学了
+- 9 条多表 JOIN 加练：用户订单数、商品销量、商品销售额、分类商品数与均价、
+  买过某分类的用户、订单数 Top N、订单明细小计、无明细订单、最近一单商品
+- LEFT JOIN 统计数量要用 `COUNT(o.id)`，不能用 `COUNT(*)`，否则没匹配的行会被算成 1
+- 5 张表 ER 图：users→orders→order_items←products←categories
+- LeetCode 181：同一张表 JOIN 两次（自连接）
+
+### 踩的坑
+- "每个用户最近一次下单的商品名"查出 0 行：订单 6–10 没有 order_items 明细，
+  三个人的最近一单都没明细，JOIN 后全被过滤；
+  补了 3 条明细（订单 8、9、10）后正常。
+  教训：查不出结果先 `SELECT COUNT(*)` 确认数据，再怀疑 SQL。
+- ER 图第一次导出把新旧两张图叠在一起（旧图还有 email、order_time 这些不存在的字段），
+  重导后只留 5 张表。
+- 中文说明又忘了加 `--`，整段执行报错 1064。
+
+### 明天（2026-11-22 周日）
+- 给 5 张表补 4 个外键约束
+- LeetCode 182
+- 重导 ER 图
+- 周日复盘
+
+
+## 2026-11-22（周日）
+
+### 今天完成
+- 给 5 张表补了 4 个外键：orders.user_id、order_items.order_id、
+  order_items.product_id、products.category_id，用 information_schema 验证到 4 行
+- LeetCode 182：GROUP BY + HAVING COUNT(*) > 1
+- ER 图重导，只保留 5 张表
+- 本周复盘（见下）
+
+### 踩的坑
+- 外键要先建主表再建从表，否则报 1215/1452
+- `HAVING` 里才能放聚合函数，`WHERE COUNT(*) > 1` 会报错
+
+### 档位
+本周：标准档（实际约 8 小时）
+下周：标准档（7–8 小时）
+理由：正常上课 + 兼职约 5 小时 + 健身 4 次，没有整块时间；
+本档已完成 Week 2 前半段，不需要冲刺档。
+
+### 本周复盘
+1. 实际学了几小时？约 8 小时。
+2. 交出了什么？
+   - 11.16 限时测试 10 条：10/10
+   - 11.17 聚合加练 10 条：10/10
+   - 11.18 10 条 JOIN + 8 条 LEFT JOIN
+   - 11.19 8 条混合查询，搞懂 ON / WHERE
+   - 11.20 5 张表体系 + 6 条多表 JOIN + LeetCode 175
+   - 11.21 9 条 JOIN + 5 表 ER 图 + LeetCode 181
+   - 11.22 4 个外键 + LeetCode 182 + ER 图重导
+   - GitHub：day01–day08 已提交
+3. 卡在哪？都是小问题，已全部解决：
+   - LEFT JOIN 右表条件写 WHERE 会退化成 INNER JOIN
+   - 多表 JOIN 的 ON 写错关联字段
+   - 中文说明没加 `--`
+   - order_items 误插进 orders，多出 id=11 脏数据
+   - 订单 6–10 缺明细导致查空
+   - ER 图导出残留旧图
+4. 下周最重要的一件事？
+   按文档推进：11.26 前完成 Week 2 全部（子查询、UNION、限时 8 条），
+   11.27 进入 Week 3 索引与事务。不额外加任务，也不拖进度。
+
+### 明天（2026-11-23 周一）
+- 子查询：`WHERE amount > (SELECT AVG(...))`，写 5 条，存 `week2/day09.sql`
+- LeetCode 183 从不订购的客户
+- Commit + Push

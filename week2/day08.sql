@@ -1,7 +1,7 @@
 -- Day 8：多表 JOIN 加练（2026-11-21）
 USE study_db;
 
-每个用户的订单数（用 COUNT(o.id)）
+-- 每个用户的订单数（用 COUNT(o.id)）
 SELECT u.name AS 用户名,
        COUNT(o.id) AS 订单数
   FROM users u
@@ -9,7 +9,7 @@ SELECT u.name AS 用户名,
   GROUP BY u.id,u.name
   ORDER BY u.id;
 
-每个商品的销量
+-- 每个商品的销量
 SELECT p.name AS 商品名,
        SUM(oi.quantity) as销售数量
   FROM products p
@@ -17,7 +17,7 @@ SELECT p.name AS 商品名,
   GROUP BY p.id,p.name
   ORDER BY p.id;     
 
-每个商品的销售额
+-- 每个商品的销售额
 SELECT p.name AS 商品名,
        SUM(p.price * oi.quantity) AS 销售额
   FROM products p 
@@ -25,7 +25,7 @@ SELECT p.name AS 商品名,
   GROUP BY p.id,p.name
   ORDER BY 销售额 DESC;
 
-每个分类的商品数 + 平均价
+-- 每个分类的商品数 + 平均价
 SELECT c.name AS 分类名,
        COUNT(p.id) AS 商品数,
        ROUND(AVG(p.price),2) AS 平均价
@@ -33,7 +33,7 @@ SELECT c.name AS 分类名,
   JOIN products p ON c.id = p.category_id
   GROUP BY c.id,c.name;
 
-买过“数码”类商品的用户
+-- 买过“数码”类商品的用户
 SELECT DISTINCT u.name AS 用户名
   FROM users u
   JOIN orders o ON u.id = o.user_id
@@ -42,15 +42,16 @@ SELECT DISTINCT u.name AS 用户名
   JOIN categories c ON p.category_id = c.id
   WHERE c.name = '数码';
 
-订单数前 3 的用户
+-- 订单数前 3 的用户
 SELECT u.name AS 用户名,
        COUNT(o.id) AS 订单数
   FROM users u
   JOIN orders o ON u.id = o.user_id
   GROUP BY u.id,u.name
+  ORDER BY 订单数 DESC
   LIMIT 3;
 
-每个订单的明细（含小计）
+-- 每个订单的明细（含小计）
 SELECT o.id AS order_id,
        p.name AS 商品名,
        oi.quantity,
@@ -60,14 +61,14 @@ SELECT o.id AS order_id,
   JOIN products p ON oi.product_id = p.id
   ORDER BY o.id;
 
-没有明细的订单
+-- 没有明细的订单
 SELECT o.id AS order_id,
        o.amount
   FROM orders o
   LEFT JOIN order_items oi ON o.id = oi.order_id
   WHERE oi.id IS NULL;  
 
-每个用户最近一次下单的商品名（做不出就写注释跳过）
+-- 每个用户最近一次下单的商品名
 SELECT u.name, p.name AS last_product, o.order_date
 FROM users u
 JOIN orders o ON u.id = o.user_id
@@ -93,8 +94,33 @@ INSERT INTO order_items (order_id, product_id, quantity) VALUES
 (10, 1, 1);  -- 张三 · MySQL必知必会
 
 
+-- 11.22追加
+USE study_db;
 
+ALTER TABLE orders
+  ADD CONSTRAINT fk_orders_user
+  FOREIGN KEY (user_id) REFERENCES users(id);
 
+ALTER TABLE order_items
+  ADD CONSTRAINT fk_items_order
+  FOREIGN KEY (order_id) REFERENCES orders(id);
+
+ALTER TABLE order_items
+  ADD CONSTRAINT fk_items_product
+  FOREIGN KEY (product_id) REFERENCES products(id);
+
+ALTER TABLE products
+  ADD CONSTRAINT fk_products_category
+  FOREIGN KEY (category_id) REFERENCES categories(id);
+  
+  
+  
+  SELECT
+  TABLE_NAME, COLUMN_NAME, CONSTRAINT_NAME,
+  REFERENCED_TABLE_NAME, REFERENCED_COLUMN_NAME
+FROM information_schema.KEY_COLUMN_USAGE
+WHERE TABLE_SCHEMA = 'study_db'
+  AND REFERENCED_TABLE_NAME IS NOT NULL;
 
 
 
