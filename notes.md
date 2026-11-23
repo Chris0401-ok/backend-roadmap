@@ -151,7 +151,7 @@ SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT
 - [x] 175 组合两个表（LEFT JOIN）
 - [x] 181 超过经理收入的员工（自连接）
 - [x] 182 查找重复的电子邮箱（GROUP BY + HAVING）
-- [ ] 183 从不订购的客户（LEFT JOIN + IS NULL）
+- [x] 183 从不订购的客户（LEFT JOIN + IS NULL）
 - [ ] 196 删除重复的电子邮箱
 - [ ] 197 上升的温度（日期 + 自连接）
 - 176、177、178、180 是中等/窗口函数，等 Week 3 学完再回来做
@@ -226,4 +226,31 @@ SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT
 ### 明天（2026-11-23 周一）
 - 子查询：`WHERE amount > (SELECT AVG(...))`，写 5 条，存 `week2/day09.sql`
 - LeetCode 183 从不订购的客户
+- Commit + Push
+
+
+## 2026-11-23（周一）
+
+### 今天学了
+- 子查询三种用法：
+  1. 标量子查询：`WHERE amount > (SELECT AVG(amount) FROM orders)`
+  2. IN 子查询：`WHERE id IN (SELECT user_id FROM orders ...)`
+  3. 相关子查询：内层引用外层字段 `o.user_id`，外层每行重算一次
+- 相关子查询的典型场景：比"自己所在分组"的平均值高
+  `WHERE o.amount > (SELECT AVG(o2.amount) FROM orders o2 WHERE o2.user_id = o.user_id)`
+- `NOT IN` 与 `NULL` 的坑：子查询结果里有 NULL 时，整个 NOT IN 返回空
+- LeetCode 183：找"右表没有匹配"用 `LEFT JOIN ... WHERE 右表.id IS NULL`
+
+### 今天完成
+- `week2/day09.sql`：5 条子查询
+  1. 高于平均金额的订单 → 3 行（899、459、299）
+  2. 等于最高金额的一单 → 1 行（899）
+  3. 买过"显示器"的用户 → 2 行（张三、李四）
+  4. 从没下过单的用户 → 0 行（三个用户都有单）
+  5. 高于自己均价的订单 → 4 行
+- `week2/leetcode.sql`：追加 183（LEFT JOIN 版 + NOT IN 版注释）
+
+### 明天（2026-11-24 周二）
+- 子查询进阶：`EXISTS` / `NOT EXISTS`，写 5 条，存 `week2/day10.sql`
+- LeetCode 196 删除重复的电子邮箱
 - Commit + Push

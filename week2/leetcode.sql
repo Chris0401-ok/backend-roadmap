@@ -24,4 +24,17 @@ GROUP BY email
 HAVING COUNT(*) > 1;
 
 
+-- LeetCode 183. 从不订购的客户（2026-11-23）
+-- 考点：LEFT JOIN 找“右表没有匹配”的行；比 NOT IN 更安全（NOT IN 遇到 NULL 会返回空）
+SELECT c.name AS Customers
+FROM Customers c
+LEFT JOIN Orders o ON c.id = o.customerId
+WHERE o.id IS NULL;
+
+-- 等价写法（客户表里没有 NULL 时可用）：
+-- SELECT name AS Customers
+-- FROM Customers
+-- WHERE id NOT IN (SELECT customerId FROM Orders);
+
+
 
