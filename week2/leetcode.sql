@@ -37,4 +37,21 @@ WHERE o.id IS NULL;
 -- WHERE id NOT IN (SELECT customerId FROM Orders);
 
 
+-- LeetCode 196. 删除重复的电子邮箱（2026-11-24）
+-- 考点：DELETE 也能用 JOIN；p1.id > p2.id 保证只删 id 大的，留下 id 最小的那行
+DELETE p1
+FROM Person p1
+JOIN Person p2
+  ON p1.email = p2.email
+ AND p1.id > p2.id;
+
+-- 另一种写法（MySQL 不允许 DELETE 子查询直接查同一张表，要先套一层派生表）：
+-- DELETE FROM Person
+-- WHERE id NOT IN (
+--     SELECT id FROM (
+--         SELECT MIN(id) AS id FROM Person GROUP BY email
+--     ) t
+-- );
+
+
 

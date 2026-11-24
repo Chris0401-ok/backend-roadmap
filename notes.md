@@ -152,7 +152,7 @@ SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT
 - [x] 181 超过经理收入的员工（自连接）
 - [x] 182 查找重复的电子邮箱（GROUP BY + HAVING）
 - [x] 183 从不订购的客户（LEFT JOIN + IS NULL）
-- [ ] 196 删除重复的电子邮箱
+- [x] 196 删除重复的电子邮箱
 - [ ] 197 上升的温度（日期 + 自连接）
 - 176、177、178、180 是中等/窗口函数，等 Week 3 学完再回来做
 
@@ -253,4 +253,39 @@ SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT
 ### 明天（2026-11-24 周二）
 - 子查询进阶：`EXISTS` / `NOT EXISTS`，写 5 条，存 `week2/day10.sql`
 - LeetCode 196 删除重复的电子邮箱
+- Commit + Push
+
+
+## 2026-11-24（周二）
+
+### 今天学了
+- `EXISTS` / `NOT EXISTS`：只判断子查询"有没有返回行"，不关心返回什么，
+  所以子查询里写 `SELECT 1` 就够，不用 `SELECT *`
+- 相关子查询必须把外层字段写进内层：`WHERE o.user_id = u.id`，
+  漏掉就变成全表判断，结果全错
+- `EXISTS` 和 `IN` 怎么选：
+  - 子查询结果集小 → 用 `IN`
+  - 外层表小、子查询表大 → 用 `EXISTS`（找到一条就停）
+  - 涉及 `NULL` → 用 `NOT EXISTS`（`NOT IN` 遇 NULL 会返回空）
+- `DELETE` 也能用 `JOIN`：
+  `DELETE p1 FROM Person p1 JOIN Person p2 ON p1.email = p2.email AND p1.id > p2.id`
+  靠 `p1.id > p2.id` 保证留下 id 最小的那行
+
+### 今天完成
+- `week2/day10.sql`：5 条 EXISTS / NOT EXISTS
+  1. 有过订单的用户 → 3 行（张三、李四、王五）
+  2. 没有订单的用户 → 0 行
+  3. 买过"配件"类商品的用户 → 2 行（李四、王五）
+  4. 从未买过"数码"类商品的用户 → 1 行（王五）
+  5. 有 cancelled 订单的用户 → 1 行（张三）
+- `week2/leetcode.sql`：追加 196（DELETE + JOIN 写法）
+
+### 踩的坑
+- 第 4 条写成 `c.name LIKE'数码'`：没加通配符时 `LIKE` 等价于 `=`，
+  这次结果对，但 `LIKE` 本意是模糊匹配，精确比较应该直接用 `=`
+- 5 条注释都加了 `--`，前几次的错没再犯
+
+### 明天（2026-11-25 周三）
+- `UNION` / `CASE`，写 4 条，存 `week2/day11.sql`
+- LeetCode 197 上升的温度
 - Commit + Push
