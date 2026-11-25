@@ -153,7 +153,7 @@ SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT
 - [x] 182 查找重复的电子邮箱（GROUP BY + HAVING）
 - [x] 183 从不订购的客户（LEFT JOIN + IS NULL）
 - [x] 196 删除重复的电子邮箱
-- [ ] 197 上升的温度（日期 + 自连接）
+- [x] 197 上升的温度（日期 + 自连接）
 - 176、177、178、180 是中等/窗口函数，等 Week 3 学完再回来做
 
 
@@ -289,3 +289,38 @@ SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT
 - `UNION` / `CASE`，写 4 条，存 `week2/day11.sql`
 - LeetCode 197 上升的温度
 - Commit + Push
+
+
+## 2026-11-25（周三）
+
+### 今天学了
+- `UNION` / `UNION ALL`：
+  - `UNION` 会去重（要排序，慢）；`UNION ALL` 不去重（快）
+  - 能确定没有重复时，一律用 `UNION ALL`
+  - 两段 `SELECT` 的列数必须相同，列名以第一段为准
+  - `ORDER BY` 只能写在最后一段
+- `CASE WHEN ... THEN ... ELSE ... END`：
+  - 从上往下匹配，第一个成立就停，所以范围小的要写在前面
+  - `< 50` 必须写在 `BETWEEN 50 AND 300` 前面
+- `CASE` + 聚合：`SUM(CASE WHEN 条件 THEN 1 ELSE 0 END)` 做条件计数
+  - `ELSE 0` 不能省，否则不满足条件返回 NULL，整组 SUM 变 NULL
+  - 等价写法：`COUNT(CASE WHEN 条件 THEN 1 END)`
+- LeetCode 197：同一张表自连接 + `DATEDIFF(w1, w2) = 1` 找"昨天"
+
+### 今天完成
+- `week2/day11.sql`：4 条 UNION / CASE
+  1. UNION 合并"金额 ≥ 500"和"cancelled" → 2 行（订单 4、7）
+  2. UNION ALL 统计状态单数 → paid 9、cancelled 1
+  3. CASE 打标签 → 小额 4、中额 4、大额 2
+  4. CASE + 聚合 → 张三 3/1、李四 3/0、王五 3/0
+- `week2/leetcode.sql`：追加 197（自连接 + DATEDIFF）
+
+### 踩的坑
+- 第 1 条用了 `SELECT *`：两段列数和顺序一致才能 UNION，
+  表结构一改就会报错，规范写法是把列名都写出来
+- 4 条注释都加了 `--`，连续两天没再犯
+
+### 明天（2026-11-26 周四）
+- Week 2 收尾：限时 30 分钟，从空白写 8 条（JOIN + 子查询 + CASE）
+- LeetCode 595 大的国家
+- 更新 README，Week 2 结束检查

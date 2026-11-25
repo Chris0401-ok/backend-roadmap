@@ -54,4 +54,13 @@ JOIN Person p2
 -- );
 
 
+-- LeetCode 197. 上升的温度（2026-11-25）
+-- 考点：同一张表自连接 + DATEDIFF 找“昨天”；DATEDIFF(w1, w2) = 1 表示 w1 比 w2 晚一天
+SELECT w1.id
+FROM Weather w1
+JOIN Weather w2
+  ON DATEDIFF(w1.recordDate, w2.recordDate) = 1
+WHERE w1.temperature > w2.temperature;
+
+
 
