@@ -154,6 +154,7 @@ SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT
 - [x] 183 从不订购的客户（LEFT JOIN + IS NULL）
 - [x] 196 删除重复的电子邮箱
 - [x] 197 上升的温度（日期 + 自连接）
+- [x] 595 大的国家（OR）
 - 176、177、178、180 是中等/窗口函数，等 Week 3 学完再回来做
 
 
@@ -324,3 +325,54 @@ SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT
 - Week 2 收尾：限时 30 分钟，从空白写 8 条（JOIN + 子查询 + CASE）
 - LeetCode 595 大的国家
 - 更新 README，Week 2 结束检查
+
+
+## 2026-11-26（周四）· Week 2 收尾
+
+### 限时测试结果
+闭卷 30 分钟，8 条：**7 对 1 错**。
+错的：第 6 题（CASE 统计金额档位）。
+
+### 今天学了
+- `GROUP BY` 写成 `GROUP BY 档位`（用 SELECT 里的别名）MySQL 能跑，
+  但标准 SQL 要在 `GROUP BY` 里重复整个 `CASE` 表达式，换数据库就报错
+- `CASE` 没有 `ELSE` 时，不满足任何 `WHEN` 的行返回 `NULL`，
+  会单独聚成一组 `NULL`；这次数据刚好全覆盖，所以没暴露
+- 分组统计后一定加 `ORDER BY`，否则行的顺序是随机的，
+  和预期结果“看起来不一样”，容易被误判为写错
+- LeetCode 595：两个独立条件用 `OR`，写成 `AND` 会查空
+
+### 第 6 题的正确写法
+
+```sql
+SELECT
+  CASE
+    WHEN amount > 300 THEN '大额'
+    WHEN amount BETWEEN 50 AND 300 THEN '中额'
+    ELSE '小额'
+  END AS 档位,
+  COUNT(*) AS cnt
+FROM orders
+GROUP BY 档位
+ORDER BY cnt DESC;
+```
+
+预期 3 行：中额 4、小额 4、大额 2
+
+### 今天完成
+- `week2/day12.sql`：限时 8 条
+- `week2/leetcode.sql`：追加 595
+- `README.md`：补 Week 2 进度、目录、5 表说明、LeetCode 清单
+
+### Week 2 结束检查
+- [x] 15 条 JOIN 能写出来（day07 六条 + day08 九条）
+- [x] 5 表 ER 图（er.png）
+- [x] 4 个外键
+- [x] LeetCode 175 / 181 / 182 / 183 / 196 / 197 / 595
+- [x] README 更新
+- [ ] 第 6 题重写一遍（明天开始前 5 分钟做）
+
+### 明天（2026-11-27 周五）
+- Week 3 开始：索引概念、创建/删除索引、复合索引、最左前缀
+- 存 `week3/day13.sql`
+- LeetCode 620 有趣的电影

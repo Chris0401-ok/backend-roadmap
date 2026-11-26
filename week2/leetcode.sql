@@ -63,4 +63,12 @@ JOIN Weather w2
 WHERE w1.temperature > w2.temperature;
 
 
+-- LeetCode 595. 大的国家（2026-11-26）
+-- 考点：两个独立条件用 OR；写成 AND 会因为“面积大 且 人口多”同时满足而查空
+SELECT name, population, area
+FROM World
+WHERE area >= 3000000
+   OR population >= 25000000;
+
+
 
