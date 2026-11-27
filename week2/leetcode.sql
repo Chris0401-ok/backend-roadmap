@@ -71,4 +71,13 @@ WHERE area >= 3000000
    OR population >= 25000000;
 
 
+-- LeetCode 620. 有趣的电影（2026-11-27）
+-- 考点：<> 不等于；id % 2 = 1 判奇数；ORDER BY 放最后且要在 % 运算之外
+SELECT *
+FROM cinema
+WHERE description <> 'boring'
+  AND id % 2 = 1
+ORDER BY rating DESC;
+
+
 

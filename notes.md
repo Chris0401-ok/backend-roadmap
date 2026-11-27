@@ -155,6 +155,7 @@ SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT
 - [x] 196 删除重复的电子邮箱
 - [x] 197 上升的温度（日期 + 自连接）
 - [x] 595 大的国家（OR）
+- [x] 620 有趣的电影（取模 + ORDER BY）
 - 176、177、178、180 是中等/窗口函数，等 Week 3 学完再回来做
 
 
@@ -376,3 +377,54 @@ ORDER BY cnt DESC;
 - Week 3 开始：索引概念、创建/删除索引、复合索引、最左前缀
 - 存 `week3/day13.sql`
 - LeetCode 620 有趣的电影
+
+
+## 2026-11-27（周五）· Week 3 第 1 天
+
+### 今天学了
+- 索引 = 书的目录：不扫全表，先查目录再定位行
+- `EXPLAIN` 看三个关键列：
+  - `type`：`ALL` = 全表扫；`ref` = 走索引
+  - `key`：实际用了哪个索引，`NULL` = 没用索引
+  - `rows`：预计扫描行数
+- **小表看不出索引效果**：几十行时优化器直接全表扫，
+  必须造 1000 行以上（今天建了 `idx_test` 灌 1000 行）
+- 复合索引 `(user_id, status)` 遵循**最左前缀**：
+  - `WHERE user_id = ? AND status = ?` → 用得上
+  - `WHERE user_id = ?` → 用得上
+  - `WHERE status = ?` → **用不上**，因为跳过最左列
+- 三种索引失效：
+  1. 左边模糊 `LIKE '%paid%'`
+  2. 索引列上做运算 `id + 1 = 5`
+  3. 函数包住索引列 `DATE(created_at) = ...`
+  → 第 3 种改写成范围查询就能用上索引
+- 索引不是越多越好：每个索引都会拖慢 `INSERT/UPDATE`，还占空间
+
+### 今天完成
+- `week3/day13.sql`：
+  - 建 `idx_test` 灌 1000 行
+  - 无索引 → 建 `idx_user_id` → 再 EXPLAIN 对比
+  - 复合索引 `idx_user_status` + 最左前缀 3 个实验
+  - `SHOW INDEX` / `DROP INDEX`
+  - 3 个索引失效实验 + 改写验证
+- `week2/leetcode.sql`：追加 620
+
+### 关键预期结果（记下来，明天加真实索引时对照）
+| 场景 | type | key |
+|---|---|---|
+| 无索引 WHERE user_id | ALL | NULL |
+| 有 idx_user_id | ref | idx_user_id |
+| 复合索引 + 两个条件 | ref | idx_user_status |
+| 复合索引 + 只用 status | ALL | NULL |
+| LIKE '%paid%' | ALL | NULL |
+| id + 1 = 5 | ALL | NULL |
+
+### 踩的坑
+- 索引第一天最容易的错觉：以为建了索引就一定走索引，
+  实际优化器有成本判断，小表宁可全表扫
+
+### 明天（2026-11-28 周六）
+- 给 `orders.user_id`、`orders.created_at` 加索引
+- 用 `EXPLAIN` 对比加索引前后，截图存 `week3/explain.md`
+- LeetCode 627 变更性别
+- Commit + Push
