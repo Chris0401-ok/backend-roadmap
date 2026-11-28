@@ -80,4 +80,13 @@ WHERE description <> 'boring'
 ORDER BY rating DESC;
 
 
+-- LeetCode 627. 变更性别（2026-11-28）
+-- 考点：一条 UPDATE + CASE 互换两值；写成两条 UPDATE 会互相覆盖
+UPDATE Salary
+SET sex = CASE
+              WHEN sex = 'm' THEN 'f'
+              ELSE 'm'
+          END;
+
+
 

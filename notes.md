@@ -156,6 +156,7 @@ SELECT → FROM → WHERE → GROUP BY → HAVING → ORDER BY → LIMIT
 - [x] 197 上升的温度（日期 + 自连接）
 - [x] 595 大的国家（OR）
 - [x] 620 有趣的电影（取模 + ORDER BY）
+- [x] 627 变更性别（UPDATE + CASE）
 - 176、177、178、180 是中等/窗口函数，等 Week 3 学完再回来做
 
 
@@ -428,3 +429,39 @@ ORDER BY cnt DESC;
 - 用 `EXPLAIN` 对比加索引前后，截图存 `week3/explain.md`
 - LeetCode 627 变更性别
 - Commit + Push
+
+
+## 2026-11-28（周六）· Week 3 第 2 天
+
+### 今天学了
+- `EXPLAIN` 判断有没有走索引，只看两列：`type` 是不是 `ALL`、`key` 是不是 `NULL`
+- 加索引前后实测（`idx_test` 1000 行，`WHERE user_id = 2`）：
+  | 指标 | 加索引前 | 加索引后 |
+  |---|---|---|
+  | type | ALL | ref |
+  | key | NULL | idx_user_id |
+  | rows | 1000 | 333 |
+  | filtered | 10.00 | 100.00 |
+- `key_len = 4` 表示索引用了一个 INT 字段（4 字节）
+- `ref = const` 表示条件里是常量，直接拿常量去索引里定位
+- `filtered = 100.00` 表示索引定位出来的行全部满足条件，不用二次过滤
+- 小表（10 行的 `orders`）加索引也看不出效果，优化器会直接全表扫
+- 索引有代价：占磁盘 + 拖慢 `INSERT/UPDATE/DELETE`
+
+### 今天完成
+- `week3/day14.sql`：给 `orders` 加了 `idx_orders_user_id`、`idx_orders_order_date` 两个索引
+- `week3/explain_before_small.png`、`week3/explain_after_small.png`：两张 EXPLAIN 截图
+  （原图各 6 MB，裁到结果区 + 压成调色板 PNG，降到 56 KB / 63 KB）
+- `week3/explain.md`：截图 + 前后字段对照表 + 自己的解释 + 三种索引失效写法
+- `week2/leetcode.sql`：追加 627
+
+### 踩的坑
+- 截图文件各 6 MB，仓库会变大；后续截图只截结果区再压缩
+- 图片不能打包成 zip 交给仓库：Markdown 显示不出来，面试官也不会解压
+- 判断索引有没有生效，不只看“建了没有”，而是要看 `EXPLAIN` 的 `key`
+
+### 明天（2026-11-29 周日）
+- 事务：ACID、`START TRANSACTION` / `COMMIT` / `ROLLBACK`
+- 写“转账”事务，演示回滚 → `week3/day15.sql`
+- LeetCode 596 超过 5 名学生的课
+- 周日复盘
